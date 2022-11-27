@@ -1,4 +1,4 @@
-# 🏛️ Simple DAO with Re-Entrancy Example
+# 🏛️ Simple DAO with Diamond Contract
 
 > Quickly spin up a DAO smart contract where you choose the initial group of members.
 
@@ -27,11 +27,11 @@ Prerequisites: [Node](https://nodejs.org/en/download/) plus [Yarn](https://class
 > clone/fork 🏗 scaffold-eth:
 
 ```bash
-git clone https://github.com/austintgriffith/scaffold-eth.git simple-proposal-DAO-re-entrancy-ex
+git clone <http url>
 
-cd simple-proposal-DAO-re-entrancy-ex
+cd simple-DAO-diamond
 
-git checkout simple-proposal-DAO-re-entrancy-ex
+git checkout blockchain-project-4
 ```
 
 > install and start your 👷‍ Hardhat chain:
