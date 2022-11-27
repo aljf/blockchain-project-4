@@ -37,7 +37,7 @@ git checkout simple-proposal-DAO-re-entrancy-ex
 > install and start your 👷‍ Hardhat chain:
 
 ```bash
-cd simple-proposal-DAO-re-entrancy-ex
+cd simple-DAO-diamond
 yarn install
 yarn chain
 ```
@@ -45,21 +45,20 @@ yarn chain
 > in a second terminal window, start your 📱 frontend:
 
 ```bash
-cd simple-proposal-DAO-re-entrancy-ex
 yarn start
 ```
 
 > in a third terminal window, 🛰 deploy your contract:
 
 ```bash
-cd simple-proposal-DAO-re-entrancy-ex
 yarn deploy
 ```
 
-🔏 Edit your smart contract `PowDAO.sol` in `packages/hardhat/contracts`
+🔏 Edit your smart contract `PowDAO.sol` in `packages/hardhat/contracts` and the new facets are in `packages/hardhat/contracts/facets`
 
 📝 Edit your frontend `App.jsx` in `packages/react-app/src`
 
 💼 Edit your deployment scripts in `packages/hardhat/deploy`
 
 📱 Open http://localhost:3000 to see the app
+
