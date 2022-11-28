@@ -1,5 +1,5 @@
 import { Button, Card,  List, Row, Col, Descriptions, Input, Tag } from "antd";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Address, AddressInput, Balance, EtherInput } from "../components";
 import { ethers } from "ethers";
 
@@ -18,14 +18,25 @@ export default function DAO({ contractAddress, price, readContracts, writeContra
 
     const [ payoutResult, setPayoutResult ] = useState();
     const [ payoutClicked, setPayoutClicked ] = useState("none");
+
+    const [newFacetAddress, setnewFacetAddress ] = useState()
+    useEffect(async() => {
+        if (readContracts) {
+        const AddingFacet = await readContracts.AddingFacet
+        if(AddingFacet) {
+                setnewFacetAddress(AddingFacet.address)
+                return AddingFacet.address
+        } 
+    }
+    });
     
     async function voteYes(proposalId) {
-        const result = await tx(writeContracts.PowDAO.submitVote(proposalId, 1));
+        const result = await tx(writeContracts.PowDAOFacet.submitVote(proposalId, 1));
         console.log(result)
     }
 
     async function voteNo(proposalId) {
-        const result = await tx(writeContracts.PowDAO.submitVote(proposalId, 2));
+        const result = await tx(writeContracts.PowDAOFacet.submitVote(proposalId, 2));
         console.log(result)
     }
 
@@ -44,7 +55,7 @@ export default function DAO({ contractAddress, price, readContracts, writeContra
                         />
                         <Button onClick={ async ()=>{
                             console.log(toAddress)
-                            const result = await readContracts.PowDAO.members(toAddress);
+                            const result = await readContracts.PowDAOFacet.members(toAddress);
                             setMemberInfo(parseInt(result[0]))
                             console.log(parseInt(result[0]))
                             setShowMemberInfo("block")
@@ -52,7 +63,7 @@ export default function DAO({ contractAddress, price, readContracts, writeContra
                             Search
                         </Button>
                         <div style={{fontSize:"16px", margin:"12px", display:showMemberInfo}} >
-                        {memberInfo == 1 ? toAddress+" is apart of the PowDAO 👍" : "This address is NOT apart of the PowDAO"}
+                        {memberInfo == 1 ? toAddress+" is apart of the PowDAOFacet 👍" : "This address is NOT apart of the PowDAOFacet"}
                         </div>
                     </Card >
                 </Col>
@@ -74,13 +85,13 @@ export default function DAO({ contractAddress, price, readContracts, writeContra
                         />
                         </div>
                         <Button onClick={ async ()=>{
-                            const result = await tx (writeContracts.PowDAO.addMember(toAddKickAddress, memberReason));
+                            const result = await tx (writeContracts.PowDAOFacet.addMember(toAddKickAddress, memberReason));
                             console.log(result)
                         }}>
                             Add
                         </Button>
                         <Button onClick={ async ()=>{
-                            const result = await tx (writeContracts.PowDAO.kickMember(toAddKickAddress, memberReason));
+                            const result = await tx (writeContracts.PowDAOFacet.kickMember(toAddKickAddress, memberReason));
                             console.log(result)
                         }}>
                             Kick
@@ -151,7 +162,7 @@ export default function DAO({ contractAddress, price, readContracts, writeContra
                         
                         <Button onClick={ async ()=>{
                             const value = ethers.utils.parseEther("" + amount);
-                            const result = await tx( writeContracts.PowDAO.submitProposal(value, proposalSubmitDetails) )
+                            const result = await tx( writeContracts.PowDAOFacet.submitProposal(value, proposalSubmitDetails) )
                         }}>
                         Submit Proposal
                         </Button>
@@ -169,9 +180,26 @@ export default function DAO({ contractAddress, price, readContracts, writeContra
                         }}
                         placeholder="Enter Propsal ID"/>
                         <Button onClick={ async ()=>{
-                            const result = await tx(writeContracts.PowDAO.processProposal(processProposalId))
+                            const result = await tx(writeContracts.PowDAOFacet.processProposal(processProposalId), async update => {
+                                console.log("📡 Transaction Update:", update);
+                                if (update && (update.status === "confirmed" || update.status === 1)) {
+                                    const signatures = [];
+                                    Object.keys(writeContracts.AddingFacet.interface.functions).map(key => {
+                                      signatures.push(writeContracts.AddingFacet.interface.getSighash(key));
+                                    });
+                                    const diamondCutParams = [[newFacetAddress, 0, signatures]];
+                                    tx(
+                                      writeContracts.DiamondCutFacet.diamondCut(
+                                        diamondCutParams,
+                                        "0x0000000000000000000000000000000000000000",
+                                        "0x",
+                                      ),
+                                    );
+                                }
+                              })
+                            
                         }}>
-                        Process
+                        Process & Upgrade Diamond
                         </Button>
                     </Card>
                 </Col>
@@ -180,7 +208,7 @@ export default function DAO({ contractAddress, price, readContracts, writeContra
                     <Card >
                         <div >
                             <Button onClick={ async ()=>{
-                            const result = await tx(writeContracts.PowDAO.payout(address))
+                            const result = await tx(writeContracts.PowDAOFacet.payout(address))
                             console.log(parseInt(result))
                             setPayoutResult(result)
                             setPayoutClicked("block")
@@ -192,7 +220,7 @@ export default function DAO({ contractAddress, price, readContracts, writeContra
                             </div>
                         </div>
                         <Button onClick={ async ()=>{
-                            const result = await tx(writeContracts.PowDAO.getPayout(address))
+                            const result = await tx(writeContracts.PowDAOFacet.getPayout(address))
                         }}
                         style={{margin:"4px"}}>
                             Get Paid

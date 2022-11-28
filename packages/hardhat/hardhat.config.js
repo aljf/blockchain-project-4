@@ -25,7 +25,7 @@ const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 //
 // Select the network you want to deploy to here:
 //
-const defaultNetwork = "localhost";
+const defaultNetwork = "sepolia";
 
 const mainnetGwei = 21;
 
@@ -88,6 +88,15 @@ module.exports = {
     //   accounts: [`${process.env.XDAI_DEPLOYER_PRIV_KEY}`],
     // },
 
+    sepolia: {
+      url: `https://sepolia.infura.io/v3/b14cb19409b9402db9a0ff908b6d70a4`, // <---- YOUR INFURA ID! (or it won't work)
+      
+       //    url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXXXXXXXXXXXXXX/eth/rinkeby", // <---- YOUR MORALIS ID! (not limited to infura)
+      
+      accounts: {
+        mnemonic: mnemonic(),
+      },
+    },
     rinkeby: {
       url: "https://rinkeby.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad", // <---- YOUR INFURA ID! (or it won't work)
       
@@ -101,7 +110,8 @@ module.exports = {
       url: "https://kovan.infura.io/v3/460f40a260564ac4a4f4b3fffb032dad", // <---- YOUR INFURA ID! (or it won't work)
     
       //    url: "https://speedy-nodes-nyc.moralis.io/XXXXXXXXXXXXXXXXXXXXXXX/eth/kovan", // <---- YOUR MORALIS ID! (not limited to infura)
-      
+      gasPrice: 1000000000,
+      gas: 6000000,
       accounts: {
         mnemonic: mnemonic(),
       },

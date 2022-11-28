@@ -52,7 +52,7 @@ const { ethers } = require("ethers");
 */
 
 /// 📡 What chain are your contracts deployed to?
-const targetNetwork = NETWORKS.localhost; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+const targetNetwork = NETWORKS.sepolia; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
 const DEBUG = true;
@@ -77,7 +77,7 @@ const mainnetInfura = navigator.onLine
 // 🏠 Your local provider is usually pointed at your local blockchain
 const localProviderUrl = targetNetwork.rpcUrl;
 // as you deploy to other networks you can set REACT_APP_PROVIDER=https://dai.poa.network in packages/react-app/.env
-const localProviderUrlFromEnv = process.env.REACT_APP_PROVIDER ? process.env.REACT_APP_PROVIDER : localProviderUrl;
+const localProviderUrlFromEnv = "https://sepolia.infura.io/v3/b14cb19409b9402db9a0ff908b6d70a4";
 if (DEBUG) console.log("🏠 Connecting to provider:", localProviderUrlFromEnv);
 const localProvider = new ethers.providers.StaticJsonRpcProvider(localProviderUrlFromEnv);
 
@@ -245,12 +245,12 @@ function App(props) {
   ]);
 
   // keep track of a variable from the contract in the local React state:
-  const proposalQueue = useContractReader(readContracts, "PowDAO", "proposals", 0);
+  const proposalQueue = useContractReader(readContracts, "PowDAOFacet", "proposals", 0);
   //if (DEBUG) console.log("Proposal Queue:", proposalQueue);
 
   // 📟 Listen for broadcast events and find the difference between the two arrays
-  const submitProposalEvents = useEventListener(readContracts, "PowDAO", "SubmitProposal", localProvider, 1);
-  const processedProposalEvents = useEventListener(readContracts, "PowDAO", "ProcessedProposal", localProvider, 1);
+  const submitProposalEvents = useEventListener(readContracts, "PowDAOFacet", "SubmitProposal", localProvider, 1);
+  const processedProposalEvents = useEventListener(readContracts, "PowDAOFacet", "ProcessedProposal", localProvider, 1);
 
   // Find the events which have not been processed yet. Pass processed dataset down to the DAo component.
   let processedDataSet = [];
@@ -274,10 +274,10 @@ function App(props) {
   const [contractAddress, setContractAddress ] = useState()
   useEffect(async() => {
     if (readContracts) {
-      const PowDAO = await readContracts.PowDAO
-      if(PowDAO) {
-          setContractAddress(PowDAO.address)
-          return PowDAO.address
+      const PowDAOFacet = await readContracts.PowDAOFacet
+      if(PowDAOFacet) {
+          setContractAddress(PowDAOFacet.address)
+          return PowDAOFacet.address
       } 
   }
   });
@@ -488,7 +488,7 @@ function App(props) {
               }}
               to="/"
             >
-              PowDAO
+              PowDAOFacet
             </Link>
           </Menu.Item>
           <Menu.Item key="/contract">
@@ -498,7 +498,7 @@ function App(props) {
               }}
               to="/contract"
             >
-              PowDAO Contract
+              PowDAOFacet Contract
             </Link>
           </Menu.Item>
           <Menu.Item key="/reentrancycontract">
@@ -531,14 +531,28 @@ function App(props) {
             </Route>
 
             <Route exact path="/contract">
-              <Contract
-                name="PowDAO"
+              <Contract	
+                  name="Diamond"	
+                  signer={userSigner}	
+                  provider={localProvider}	
+                  address={address}	
+                  blockExplorer={blockExplorer}	
+                />	
+                  <Contract	
+                  name="PowDAOFacet"	
+                  signer={userSigner}	
+                  provider={localProvider}	
+                  address={address}	
+                  blockExplorer={blockExplorer}	
+                />
+              {/* <Contract
+                name="PowDAOFacet"
                 signer={userSigner}
                 provider={localProvider}
                 address={address}
                 blockExplorer={blockExplorer}
                 contractConfig={contractConfig}
-              />
+              /> */}
             </Route>
 
             <Route exact path="/reentrancycontract">
@@ -574,7 +588,7 @@ function App(props) {
 
       <div style={{ position: "fixed", textAlign: "center", right: 450, top:0, padding: 10 }}>
         
-       PowDAO Balance
+       PowDAOFacet Balance
         <Balance
             address={contractAddress} 
             provider={localProvider} // Change to Mainnet when contracts are deployed

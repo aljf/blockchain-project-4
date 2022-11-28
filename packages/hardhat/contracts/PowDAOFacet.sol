@@ -1,14 +1,3 @@
-// SPDX-License-Identifier: MIT
-// Code snippets taken from MulockDAO v2 https://github.com/MolochVentures/moloch/blob/master/contracts/Moloch.sol
-
-// Quickly initiate a DAO by sending an array of address in the constructor of this contract on deploy. 
-// DAO proposals can be created by anyone, but only voted on by members.
-// Members can create proposals to add or kick members. 
-// Members cannot withdraw their deposited funds once they are deposited. All deposited funds will be used for the good of the DAO.
-// Public Goods...
-// This type of DAO can be used by sports teams to pay for field time, equipment, travel, etc. Another use case is for public contruction or maintenance projects. 
-// A neighborhood/ town/ governoment can deposit a bunch of funds which can be democratically voted on and invoices can be submitted by the contractors.  
-
 pragma solidity 0.6.7;
 
 // import "hardhat/console.sol";
@@ -16,7 +5,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 import "hardhat/console.sol";
 
 
-contract PowDAO { 
+contract PowDAOFacet { 
     
     using SafeMath for uint256;
 
@@ -86,7 +75,7 @@ contract PowDAO {
 
         summoningTime = now;
         periodDuration = 17280; // 5 periods/ day = 17280, 35 periods/day = 102.85714
-        votingPeriodLength = 60; // 7 days = 604800, 1 hr = 3600
+        votingPeriodLength = 6; // 7 days = 604800, 1 hr = 3600
     }
 
     // ALLOWANCE FUNCTIONS
@@ -231,7 +220,7 @@ contract PowDAO {
         require(proposals[proposalId].flags[1] == false, "This proposal has already been processed");
         require(getCurrentTime() >= proposals[proposalId].startingTime, "voting period has not started");
         require(hasVotingPeriodExpired(proposals[proposalId].startingTime), "proposal voting period has not expired yet");
-        console.log(proposals[proposalId].paymentRequested);
+        require(proposals[proposalId].proposer == msg.sender, "Must be submitted by the proposer.");
         require(proposals[proposalId].paymentRequested <= address(this).balance, "DAO balance too low to accept the proposal.");
         for(uint256 i=0; i<proposalQueue.length; i++) {
             if (proposalQueue[i]==proposalId) {
