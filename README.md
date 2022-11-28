@@ -29,7 +29,7 @@ Prerequisites: [Node](https://nodejs.org/en/download/) plus [Yarn](https://class
 ```bash
 git clone <http url>
 
-cd simple-DAO-diamond
+cd path/to/blockchain-project-4
 
 git checkout blockchain-project-4
 ```
@@ -37,7 +37,6 @@ git checkout blockchain-project-4
 > install and start your 👷‍ Hardhat chain:
 
 ```bash
-cd simple-DAO-diamond
 yarn install
 yarn chain
 ```
