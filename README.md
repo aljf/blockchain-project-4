@@ -1,30 +1,18 @@
 # 🏛️ Simple DAO with Diamond Contract
 
-> Quickly spin up a DAO smart contract where you choose the initial group of members.
+Team Members:
+George Thomas
+Robert Linhart
+Arman Hasanzade
+Colton Gross
 
-![PowDAO Dashboard](https://adaptiveclaim.s3.amazonaws.com/Screenshot+2021-09-20+114944.png)
+Test Contract Addresses:
+"PowDAOFacet" at 0x52F203D8c8b713EbC2709bED991F4026BF41ad29
+"DiamondCutFacet" at 0x1970e4A1ACfA9367FD1E45b054ab9B2C04334a2c
+"Diamond" at 0x9094abAAaE718090013fb183F4e919D3E51A5cb8
+"AddingFacet" at 0xa3B69c7c217fA43b9B7F98d5CB5f5f39E8DD07B3
 
-## 📘 DAO Specifics
-
-Quickly initiate a DAO by sending an array of address in the constructor of this contract on deploy. DAO proposals can be created by anyone, but only voted on by members. Members can create proposals to add or kick members. Members cannot withdraw their deposited funds once they are deposited. All deposited funds will be used for the good of the DAO.
-
-Public Goods...
-This type of DAO can be used by sports teams to pay for field time, equipment, travel, etc. Another use case is for public contruction or maintenance projects. 
-A neighborhood/ town/ governoment can deposit a bunch of funds which can be democratically voted on and invoices can be submitted by the contractors.  
-
-## ⭐ Bonus
-
-A re-entrancy proxy contract has been created to verify the security of the PowDAO contract withdraw function. This contract can be found in `packages/hardhat/contracts`. To mimic a re-entrancy attack, uncomment the file in the deploy script `packages\hardhat\deploy\00_deploy_your_contract.js` and uncomment the 2 function calls in the contract itself ('powdao.getPayoutUnsafe(address(this));'). On deploy, this 'attacking' smart contract will create a proposal and if the proposal is approved by DAO members the proposer can withdraw the funds. To create a re-entrancy attack when you are withdrawing your funds, use the 'getPayoutUnsafe' function versus 'getPayout' which does not have the re-entrancy vulnerability. 
-
-Re-entrancy is caused by repeatedly calling the a fallback function in the proxy contracts receive function. This will create a loop which will be executed until it runs out of gas making repeated function calls. Try for yourself!
-
-[Info on Re-Entrancy Attack](https://quantstamp.com/blog/what-is-a-re-entrancy-attack)
-
-## 🏄‍♂️ Quick Start
-
-Prerequisites: [Node](https://nodejs.org/en/download/) plus [Yarn](https://classic.yarnpkg.com/en/docs/install/) and [Git](https://git-scm.com/downloads)
-
-> clone/fork 🏗 scaffold-eth:
+PowDAO transcations can be viewed here: https://sepolia.otterscan.io/address/0x52F203D8c8b713EbC2709bED991F4026BF41ad29
 
 ```bash
 git clone <http url>

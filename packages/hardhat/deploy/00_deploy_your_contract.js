@@ -65,6 +65,17 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     log: true,
   });
   
+  // const PowDAOFacetContract = await ethers.getContract("PowDAOFacet", deployer);
+  // PowDAOFacetContract.transferOwnership("0xF52a71ecc3CD6EB619c21759EB78568f09570E18");
+
+  // const diamondCutFacetContract = await ethers.getContract("diamondCutFacet", deployer);
+  // diamondCutFacetContract.transferOwnership("0xF52a71ecc3CD6EB619c21759EB78568f09570E18");
+
+  // const diamondContract = await ethers.getContract("Diamond", deployer);
+  // diamondContract.transferOwnership("0xF52a71ecc3CD6EB619c21759EB78568f09570E18");
+
+  // const AddingFacetContract = await ethers.getContract("AddingFacet", deployer);
+  // AddingFacetContract.transferOwnership("0xF52a71ecc3CD6EB619c21759EB78568f09570E18");
 
   /*
     // Getting a previously deployed contract
